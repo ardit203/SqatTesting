@@ -1,0 +1,47 @@
+<div class="container mt-5" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5 text-center">
+
+                    <div class="mx-auto mb-3 d-grid place-items-center rounded-circle d-flex justify-content-center align-items-center"
+                         style="width:72px;height:72px;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.2);">
+                        <span style="font-weight:900;font-size:26px;color:#dc3545;">403</span>
+                    </div>
+
+                    <h3 class="fw-bold mb-2">Access denied</h3>
+                    <p class="text-muted mb-4">
+                        You don’t have permission to view this page.
+                        If you think this is a mistake, contact an admin.
+                    </p>
+
+                    <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                        <button class="btn btn-outline-secondary px-4" type="button" onclick="history.back()">
+                            Go Back
+                        </button>
+
+                        <a class="btn btn-primary px-4" href="/products">
+                            Go Home
+                        </a>
+
+
+                        <a class="btn btn-outline-primary px-4"
+                           th:if="${#authorization.expression('isAnonymous()')}"
+                           href="/login">
+                            Login
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="small text-muted">
+                        Tip: If you logged in with the wrong account, try logging out and logging back in.
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

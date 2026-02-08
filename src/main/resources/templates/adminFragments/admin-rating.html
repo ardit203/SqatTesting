@@ -1,0 +1,28 @@
+<div class="mt-4">
+    <div class="p-3 rounded-3"
+         style="background: rgba(47,93,98,.06); border: 1px solid rgba(47,93,98,.12);">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h5 class="mb-1">Rating</h5>
+
+
+                <div class="d-flex align-items-center gap-2">
+                                <span class="fw-semibold"
+                                      th:text="${avgRating != null ? #numbers.formatDecimal(avgRating, 1, 1) : '0.0'}"></span>
+                    <span class="text-muted">/ 5</span>
+
+                    <span class="text-muted">•</span>
+
+                    <span class="text-muted"
+                          th:text="${ratingCount != null ? ratingCount : 0} + ' votes'">0 votes</span>
+                </div>
+            </div>
+
+
+            <span class="badge rounded-pill px-3 py-2"
+                  style="background: rgba(47,93,98,.10); color: var(--primary); border: 1px solid rgba(47,93,98,.20);">
+                Customer rating
+            </span>
+        </div>
+    </div>
+</div>

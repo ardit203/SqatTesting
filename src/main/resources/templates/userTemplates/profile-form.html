@@ -1,0 +1,144 @@
+<div class="container my-5" xmlns:th="http://www.thymeleaf.org">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div>
+                            <h2 class="h5 mb-1">Edit profile</h2>
+                            <p class="text-muted mb-0">Update your personal info and password.</p>
+                        </div>
+                        <i class="bi bi-person-gear" style="font-size: 28px; color: var(--primary);"></i>
+                    </div>
+
+
+
+
+                    <form action="/profile/edit-profile" method="post">
+
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-semibold">Username</label>
+                                <input class="form-control"
+                                       th:value="${user.username}"
+                                       disabled>
+
+                                <input type="hidden" name="username" th:value="${user.username}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-semibold">Member since</label>
+                                <input class="form-control"
+                                       th:value="${#temporals.format(user.since, 'yyyy-MM-dd HH:mm')}"
+                                       disabled>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-semibold">Name</label>
+                                <input class="form-control"
+                                       name="name"
+                                       th:value="${user.name}"
+                                       placeholder="Name"
+                                       disabled>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-semibold">Surname</label>
+                                <input class="form-control"
+                                       name="surname"
+                                       th:value="${user.surname}"
+                                       placeholder="Surname"
+                                       disabled>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+
+                        <h3 class="h6 mb-3">Change password</h3>
+
+                        <div class="alert border-0"
+                             style="background: rgba(47,93,98,.08); border-radius: 1rem;">
+                            <i class="bi bi-shield-lock me-2"></i>
+                            To change your password, enter your current password and the new password twice.
+                        </div>
+                        <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label text-muted fw-semibold">Current password</label>
+                                <div class="position-relative">
+                                    <input type="password" name="currentPassword"
+                                           class="form-control pe-5"
+                                           placeholder="Current password" required>
+
+                                    <button type="button"
+                                            class="btn btn-link position-absolute top-50 end-0 translate-middle-y me-2 p-0 text-muted toggle-password"
+                                            >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="text-muted password-msg">
+                                <th:block th:text="${passwordMessage}"/>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-semibold">New password</label>
+                                <div class="position-relative">
+                                    <input type="password" name="newPassword"
+                                           class="form-control pe-5"
+                                           placeholder="New password" required>
+
+                                    <button type="button"
+                                            class="btn btn-link position-absolute top-50 end-0 translate-middle-y me-2 p-0 text-muted toggle-password"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted fw-semibold">Confirm new password</label>
+                                <div class="position-relative">
+                                    <input type="password" name="confirmNewPassword"
+                                           class="form-control pe-5"
+                                           placeholder="Confirm new password" required>
+
+                                    <button type="button"
+                                            class="btn btn-link position-absolute top-50 end-0 translate-middle-y me-2 p-0 text-muted toggle-password"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div id="pwError" class="text-danger small d-none">
+                                    New passwords do not match.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button class="btn btn-primary px-4" type="submit">
+                                Save changes
+                            </button>
+                            <a href="/profile" class="btn btn-outline-secondary px-4">
+                                Cancel
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

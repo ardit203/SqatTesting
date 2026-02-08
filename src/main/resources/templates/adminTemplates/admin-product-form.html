@@ -1,0 +1,80 @@
+<div class="auth-wrapper" xmlns:th="http://www.thymeleaf.org">
+    <div class="auth-card w-100">
+        <div class="card-body">
+            <h1 th:if="${product == null}" class="h4 mb-3 text-center">Create Product</h1>
+            <h1 th:if="${product != null}" class="h4 mb-3 text-center">Edit Product</h1>
+
+
+            <form method="post" th:action="@{${product == null ? '/admin/products/add' : '/admin/products/edit/' + product.id}}" enctype="multipart/form-data">
+                <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" class="form-control" placeholder="Product Name" name="name" th:value="${product?.name}" required>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label class="form-label">Price</label>
+                        <input type="number" class="form-control" placeholder="Price" name="price" th:value="${product?.price}" required>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="categoryId">
+                            <option value="">All</option>
+                            <option
+                                    th:each="cat : ${categories}"
+                                    th:text="${cat.name}"
+                                    th:value="${cat.id}"
+                                    th:selected="${product != null && product.category != null && product.category == cat}"
+                            ></option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" name="department">
+                            <option value="">All</option>
+                            <option
+                                    th:each="dep : ${departments}"
+                                    th:text="${dep}"
+                                    th:value="${dep}"
+                                    th:selected="${product?.department == dep}"
+                            ></option>
+                        </select>
+                    </div>
+
+                    <div th:if="${product != null && hasImage != null && hasImage}" class="col-12">
+                        <label class="form-label">Current Image</label>
+                        <a class="mb-3 d-block" th:href="@{${product.image}}" target="_blank">
+                            <img th:src="${product.image}" width="70" height="70"
+                                 class="rounded-3" style="object-fit: cover;">
+                        </a>
+
+                        <label class="form-label">New Image</label>
+                        <input type="file" class="form-control" placeholder="Image" name="image">
+                    </div>
+
+
+                    <div th:if="${product == null || hasImage == null || hasImage == false}" class="col-12">
+                        <label class="form-label">Image</label>
+                        <input type="file" class="form-control" placeholder="Image" name="image" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label mt-2">Description</label>
+                        <textarea id="textarea" class="form-control" placeholder="Description" th:text="${product?.description}" name="description" style="height: 100px"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3 mt-3">
+                    Save
+                </button>
+                <button class="btn btn-outline-secondary w-100" type="button" onclick="history.back()">
+                    Go Back
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>

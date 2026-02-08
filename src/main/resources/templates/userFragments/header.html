@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom" xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="container">
+        <a class="navbar-brand" href="/home">
+            Sweet<span>Fashion</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">Products</a>
+                </li>
+            </ul>
+
+            <!-- WHEN USER IS LOGGED IN -->
+            <div sec:authorize="${isAuthenticated()}" class="d-flex gap-3">
+                <a href="/cart" class="position-relative icon-link">
+                    <i class="bi bi-bag icon-24"></i>
+
+                    <span class="position-absolute start-100 translate-middle">
+                      <span id="cart-sign"
+                            class="badge rounded-pill bg-danger"
+                            style="display:none;">
+                        •
+                      </span>
+                    </span>
+                </a>
+                <a href="/profile" class="icon-link">
+                    <i class="bi bi-person-circle icon-24"></i>
+                </a>
+
+                <a href="/logout" class="btn btn-primary">Logout</a>
+            </div>
+
+            <!-- WHEN USER IS NOT LOGGED IN (swap in your backend) -->
+
+            <div sec:authorize="${isAnonymous()}" class="d-flex gap-2">
+                <a href="/login" class="btn btn-outline-primary">Login</a>
+                <a href="/register" class="btn btn-primary">Sign up</a>
+            </div>
+
+        </div>
+    </div>
+</nav>

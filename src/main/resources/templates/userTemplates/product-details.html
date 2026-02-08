@@ -1,0 +1,95 @@
+<div class="container mt-5" xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="product-card h-100">
+                <img th:src="${product.image}"
+                     class="product-img w-100">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <h1 class="h3 mb-2" th:text="${product.name}"></h1>
+            <span class="text-muted mb-3"
+                  th:text="${product.department} + ' • ' + ${product.category.name} + ' • In stock: '"></span>
+            <span id="stock"></span>
+            <p class="product-price fs-3 mb-3"
+               th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 'COMMA', 2, 'POINT')}"></p>
+
+            <p class="mb-4" th:text="${product.description}"></p>
+
+            <div class="mb-3" id="sizes">
+                <h5 class="text-muted">Size</h5>
+            </div>
+
+
+            <div sec:authorize="${isAuthenticated()}" class="mb-4">
+                <h5 class="text-muted">Quantity</h5>
+                <input id="quantity-details" type="number" class="form-control w-25" value="1" min="1">
+            </div>
+
+            <div sec:authorize="${isAuthenticated()}" class="d-flex gap-2">
+                <button class="btn btn-primary btn-lg add-to-cart-btn">
+                    Add to cart
+                </button>
+            </div>
+
+
+            <div class="mt-4">
+
+
+                <div class="p-3 rounded-3"
+                     style="background: rgba(47,93,98,.06); border: 1px solid rgba(47,93,98,.12);">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div>
+                            <h5 class="mb-1">Rating</h5>
+
+
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-semibold"
+                                        th:text="${avgRating != null ? #numbers.formatDecimal(avgRating, 1, 1) : '0.0'}"></span>
+                                <span class="text-muted">/ 5</span>
+
+                                <span class="text-muted">•</span>
+
+                                <span class="text-muted"
+                                      th:text="${ratingCount != null ? ratingCount : 0} + ' votes'">0 votes</span>
+                            </div>
+                        </div>
+
+
+                        <span class="badge rounded-pill px-3 py-2"
+                              style="background: rgba(47,93,98,.10); color: var(--primary); border: 1px solid rgba(47,93,98,.20);">
+                Customer rating
+            </span>
+                    </div>
+                </div>
+
+                <form method="post" th:action="@{'/rating/{productId}' (productId=${product.id})}">
+                    <div sec:authorize="${isAuthenticated()}" class="mt-3">
+                        <h6 class="text-muted mb-2">Leave a rating</h6>
+
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <input name="rating"
+                                   type="number"
+                                   class="form-control"
+                                   style="max-width: 140px;"
+                                   min="0" max="5"
+                                   placeholder="0 - 5">
+
+                            <button type="submit"
+                                    class="btn btn-primary"
+                            >
+                                Rate
+                            </button>
+
+                            <small class="text-muted">Allowed: 0 to 5</small>
+                        </div>
+                        <div id="ratingMsg" class="small mt-2"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

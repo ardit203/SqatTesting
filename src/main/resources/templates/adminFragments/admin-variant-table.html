@@ -1,0 +1,26 @@
+<table class="table align-middle mb-0 w-100">
+    <thead>
+    <tr>
+        <th>Variant</th>
+        <th>Size</th>
+        <th>Stock</th>
+        <th></th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="variant : ${variants}">
+        <td th:text="'#' + ${variant.id}"></td>
+        <td th:text="${variant.size}"></td>
+        <td th:text="${variant.stock}"></td>
+        <td>
+            <div class="d-flex gap-2">
+                <a th:href="@{'/admin/variants/edit/{productId}/{id}' (productId=${product.id}, id=${variant.id})}"
+                   class="btn btn-sm btn-confirm">Edit</a>
+                <a th:href="@{'/admin/variants/delete/{productId}/{id}' (productId=${product.id}, id=${variant.id})}"
+                   class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

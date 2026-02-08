@@ -1,0 +1,27 @@
+<div class="cart-item mb-3 d-flex gap-3 align-items-center cart-variant" xmlns:th="http://www.thymeleaf.org"
+     th:attr="data-cart-variant-id=${cartVariant.id}, data-cart-id=${cartVariant.cart.id}, data-variant-id=${cartVariant.variant.id}" >
+    <img th:src="${cartVariant.variant.product.image}"
+         class="rounded" alt="Product image"
+         style="width: 120px; height: 90px; object-fit: cover;">
+
+    <div class="flex-grow-1">
+        <h6 class="mb-1" th:text="${cartVariant.variant.product.name}"></h6>
+        <p class="text-muted small mb-1" th:text="${cartVariant.variant.product.department + ' • ' + cartVariant.variant.product.category.name}"></p>
+        <p class="text-muted small mb-1" th:text="${cartVariant.variant.size + ' • In stock: ' + cartVariant.variant.stock}"></p>
+
+        <div class="d-flex align-items-center gap-2">
+            <span class="product-price price" th:text="'$' + ${#numbers.formatDecimal(cartVariant.variant.product.price, 1, 'COMMA', 2, 'POINT')}"></span>
+            <span class="text-muted small">x</span>
+            <input th:id="${cartVariant.id + '-quantity'}" type="number" class="form-control form-control-sm quantity handle-change" th:attr="data-cart-variant-id=${cartVariant.id}, data-price=${cartVariant.variant.product.price}"
+                   style="width: 80px;" th:value="${cartVariant.quantity}" min="1">
+
+        </div>
+    </div>
+
+    <div class="text-end">
+        <p class="fw-semibold mb-1"
+           th:id="${cartVariant.id + '-total'}"
+           th:text="'$' + ${#numbers.formatDecimal(cartVariant.variant.product.price * cartVariant.quantity, 1, 'COMMA', 2, 'POINT')}"></p>
+        <a th:href="@{'/cart/removeFromCart/{cartVariantId}' (cartVariantId=${cartVariant.id})}" class="btn btn-sm btn-outline-danger">Remove</a>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="container mt-5" xmlns:th="http://www.thymeleaf.org">
+    <div class="row g-4">
+        <!-- LEFT: Payment / Customer details -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+                <div th:replace="userFragments/orderForm"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Summary -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+                <div class="card-body p-4">
+                    <div th:replace="userFragments/orderSummary"></div>
+                    <p class="text-muted small mt-3 mb-0">
+                        This is a prototype form. No real payment is processed.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

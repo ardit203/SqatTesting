@@ -1,0 +1,48 @@
+<table class="table align-middle mb-0 w-100">
+    <thead>
+    <tr>
+        <th>Order</th>
+        <th>User</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${page.getContent()}">
+        <td th:text="'#' + ${order.id}"></td>
+        <td th:text="${order.user.username}"></td>
+        <td th:text="${#temporals.format(order.madeAt, 'dd.MM.yyyy HH:mm')}"></td>
+        <td>
+                                <span class="status-badge"
+                                      th:text="${order.delivery.status}"
+                                      th:classappend="' ' + ${order.delivery.status}">
+                                </span>
+        </td>
+        <td th:text="'$' + ${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')}">$34.00</td>
+        <td>
+            <div class="d-flex gap-2">
+                <button th:attr="data-order-id=${order.id}" class="btn btn-sm btn-primary preview-order">
+                    Preview
+                </button>
+                <a th:if="${order.delivery.status.toString() == 'PENDING'}"
+                   th:href="@{'/admin/order/confirm/{id}' (id=${order.id})}"
+                   class="btn btn-sm btn-confirm">Confirm</a>
+
+                <a th:if="${order.delivery.status.toString() == 'CONFIRMED'}"
+                   th:href="@{'/admin/order/ship/{id}' (id=${order.id})}"
+                   class="btn btn-sm btn-outline-warning">Ship</a>
+
+                <a th:if="${order.delivery.status.toString() == 'SHIPPED'}"
+                   th:href="@{'/admin/order/deliver/{id}' (id=${order.id})}"
+                   class="btn btn-sm btn-outline-success">Deliver</a>
+
+                <a th:if="${order.delivery.status.toString() == 'CANCELED' || order.delivery.status.toString() == 'DELIVERED'}"
+                   th:href="@{'/admin/order/delete/{id}' (id=${order.id})}"
+                   class="btn btn-sm btn-outline-danger">Delete</a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

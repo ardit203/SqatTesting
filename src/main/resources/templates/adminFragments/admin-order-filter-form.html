@@ -1,0 +1,82 @@
+<div class="card border-0 shadow-sm mb-4" xmlns:th="http://www.thymeleaf.org">
+    <form method="get" action="/admin/order" class="card-body">
+        <h5 class="card-title mb-3">Filter</h5>
+        <div class="mb-3">
+            <label class="form-label">Order Id</label>
+            <input type="number" class="form-control" name="id" th:value="${selectedId}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <select class="form-select" name="username">
+                <option value="">All</option>
+                <option
+                        th:each="user : ${users}"
+                        th:text="${user}"
+                        th:value="${user}"
+                        th:selected="${selectedUsername != null && selectedUsername == user}"
+                ></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+                <option value="">All</option>
+                <option
+                        th:each="stat : ${statuses}"
+                        th:text="${stat}"
+                        th:value="${stat}"
+                        th:selected="${selectedStatus != null && selectedStatus == stat}"
+                ></option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Order By</label>
+            <select class="form-select" name="sort">
+                <option th:selected="${selectedSort != null && selectedSort == 'byUsernameAsc'}"
+                        value="byUsernameAsc">Username: Ascending
+                </option>
+                <option th:selected="${selectedSort != null && selectedSort == 'byUsernameDesc'}"
+                        value="byUsernameDesc">Username: Descending
+                </option>
+
+                <option th:selected="${selectedSort != null && selectedSort == 'byMadeAtDesc'}"
+                        value="byMadeAtDesc">Date Created: Ascending
+                </option>
+                <option th:selected="${selectedSort != null && selectedSort == 'byMadeAtAsc'}"
+                        value="byMadeAtAsc">Date Created: Descending
+                </option>
+
+                <option th:selected="${selectedSort != null && selectedSort == 'byTotalAsc'}"
+                        value="byTotalAsc">Total: Ascending
+                </option>
+                <option th:selected="${selectedSort != null && selectedSort == 'byTotalDesc'}"
+                        value="byTotalDesc">Total: Descending
+                </option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Price range</label>
+            <div class="d-flex gap-2">
+                <input type="number" class="form-control" placeholder="Min" name="fromPrice"
+                       th:value="${selectedFromPrice}">
+                <input type="number" class="form-control" placeholder="Max" name="toPrice"
+                       th:value="${selectedToPrice}">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">From Date</label>
+            <div class="d-flex gap-2">
+                <input type="datetime-local" class="form-control" placeholder="From" name="fromDate"
+                       th:value="${selectedFromDate}">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">To Date</label>
+            <div class="d-flex gap-2">
+                <input type="datetime-local" class="form-control" placeholder="To" name="toDate"
+                       th:value="${selectedToDate}">
+            </div>
+        </div>
+        <button class="btn btn-primary w-100">Apply filters</button>
+    </form>
+</div>

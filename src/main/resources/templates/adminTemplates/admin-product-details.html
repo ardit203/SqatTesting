@@ -1,0 +1,47 @@
+<div class="container mt-5" xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="product-card h-100 product-img-wrap">
+                <img th:src="${product.image}"
+                     class="product-admin-img w-100">
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div>
+                <h1 class="h3 mb-2" th:text="${product.name}"></h1>
+                <span class="text-muted mb-3"
+                      th:text="${product.department} + ' • ' + ${product.category.name}"></span>
+                <p class="product-price fs-3 mb-3"
+                   th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 'COMMA', 2, 'POINT')}"></p>
+
+                <p class="mb-4" th:text="${product.description}"></p>
+
+                <div th:replace="adminFragments/admin-rating"></div>
+            </div>
+            <div th:if="${variants.size() != 0}" class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <div class="card-title mb-3 d-flex justify-content-between">
+                        <h5 th:text="'Product #' + ${product.id}"></h5>
+                        <a th:href="@{'/admin/variants/add/{productId}' (productId=${product.id})}" class="btn btn-primary">Add Variant</a>
+                    </div>
+                    <div th:replace="/adminFragments/admin-variant-table"></div>
+                </div>
+            </div>
+            <div th:if="${variants.size() == 0}" class="card-body text-center py-5">
+                <div class="mb-3"
+                     style="width:64px;height:64px;border-radius:16px;
+                background: rgba(47,93,98,.10);
+                display:flex;align-items:center;justify-content:center;
+                margin:0 auto;">
+                    <i class="bi bi-box-seam" style="font-size:28px;color:var(--primary);"></i>
+                </div>
+
+                <h5 class="card-title mb-2">No Variants Available</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+

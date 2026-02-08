@@ -1,0 +1,17 @@
+<div class="container mt-5" xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="row g-4">
+        <aside class="col-lg-3">
+            <div th:replace="userFragments/filterForm"></div>
+        </aside>
+        <section class="col-lg-9">
+            <div class="row g-4">
+                <div class="col-12 col-sm-6 col-lg-4" th:each="product: ${page.getContent()}">
+                    <div th:replace="userFragments/productCard"></div>
+                </div>
+            </div>
+            <div class="mt-5" th:include="userFragments/paging :: pageSection(${page})"></div>
+        </section>
+
+    </div>
+</div>

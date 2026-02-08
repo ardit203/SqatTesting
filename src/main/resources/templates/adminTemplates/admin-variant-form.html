@@ -1,0 +1,40 @@
+<div class="auth-wrapper" xmlns:th="http://www.thymeleaf.org">
+    <div class="auth-card w-100">
+        <div class="card-body">
+            <h1 th:if="${variant == null}" class="h4 mb-3 text-center" th:text="${'Create Variant For Product #' + product.id}"></h1>
+            <h1 th:if="${variant != null}" class="h4 mb-3 text-center" th:text="${'Edit Variant For Product #' + product.id}"></h1>
+
+
+            <form method="post" th:action="@{${variant == null ? '/admin/variants/add/' + product.id : '/admin/variants/edit/' + product.id + '/' + variant.id}}" enctype="multipart/form-data">
+                <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+                <div class="row g-3">
+                    <div class="col-sm-12">
+                        <label class="form-label">Size</label>
+                        <select class="form-select" name="size" required>
+                            <option value="">All</option>
+                            <option
+                                    th:each="size : ${sizes}"
+                                    th:text="${size}"
+                                    th:value="${size}"
+                                    th:selected="${variant?.size == size}"
+                            ></option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <label class="form-label">Stock</label>
+                        <input type="number" class="form-control" placeholder="Stock" name="stock" th:value="${variant?.stock}" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-3 mt-3">
+                    Save
+                </button>
+                <button class="btn btn-outline-secondary w-100" type="button" onclick="history.back()">
+                    Go Back
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
