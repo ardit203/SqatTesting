@@ -167,3 +167,4 @@ public class ProductsPage extends BasePage {
         throw new NoSuchElementException("Product card not found for name: " + productName);
     }
 }
+

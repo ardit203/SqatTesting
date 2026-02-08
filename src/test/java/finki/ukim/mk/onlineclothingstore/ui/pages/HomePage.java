@@ -15,3 +15,4 @@ public abstract class HomePage extends BasePage {
         super(driver);
     }
 }
+

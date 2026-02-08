@@ -144,4 +144,5 @@ public class ProfilePage extends BasePage {
         click(startShoppingButtons.get(0));
         return new ProductsPage(driver).assertLoaded();
     }
+
 }

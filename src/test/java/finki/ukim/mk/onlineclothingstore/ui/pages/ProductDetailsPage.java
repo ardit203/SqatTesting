@@ -109,4 +109,5 @@ public class ProductDetailsPage extends BasePage {
         });
         return this;
     }
+
 }

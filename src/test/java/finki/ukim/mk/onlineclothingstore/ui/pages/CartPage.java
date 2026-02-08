@@ -169,6 +169,7 @@ public class CartPage extends BasePage {
         return this;
     }
 
+
     public String getErrorTitle() {
         if (!isErrorOverlayPresentInDom()) return "";
         return driver.findElement(errorTitle).getText().trim();

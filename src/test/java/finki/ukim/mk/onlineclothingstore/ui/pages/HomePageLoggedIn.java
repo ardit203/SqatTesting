@@ -31,3 +31,4 @@ public class HomePageLoggedIn extends HomePage {
         return new ProductsPage(driver).assertLoaded();
     }
 }
+

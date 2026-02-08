@@ -137,6 +137,7 @@ public class OrderPage extends BasePage {
         return this;
     }
 
+
     public ProfilePage placeOrderWaitOutcome(String email, String phone, String address, String city, Integer zip, String country,
                                              String paymentMethod, String name, String number, String expiry, String cvc) {
 
