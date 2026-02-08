@@ -7,9 +7,6 @@ import java.util.List;
 
 public class CartPage extends BasePage {
 
-    /* -------------------- STATIC ELEMENTS (ALWAYS IN DOM) -------------------- */
-
-    // Order summary (always present)
     @FindBy(id = "subtotal")
     private WebElement subtotalSpan;
 
@@ -18,21 +15,16 @@ public class CartPage extends BasePage {
 
     private final By totalLocator = By.id("total");
 
-    // Cart rows (safe as List, can be empty)
     @FindBy(css = ".cart-variant")
     private List<WebElement> cartVariantRows;
 
-    // Confirm order button (calls JS check() in your script)
     @FindBy(id = "check-for-stocks")
     private WebElement confirmOrderButton;
 
-    // Continue browsing link
     @FindBy(css = "a[href='/products']")
     private WebElement continueBrowsingLink;
 
-    /* -------------------- DYNAMIC ELEMENTS (CREATED ONLY ON ERROR) -------------------- */
 
-    // Error overlay is created only when error occurs (showErrorOverlay)
     private final By errorOverlay = By.id("errorOverlay");
     private final By errorTitle = By.cssSelector("#errorOverlay #errTitle");
     private final By errorMsg = By.cssSelector("#errorOverlay #errMsg");
@@ -47,14 +39,13 @@ public class CartPage extends BasePage {
         return this;
     }
 
-    /* -------------------- READ TOTALS -------------------- */
 
     public String getSubtotalText() {
-        return subtotalSpan.getText().trim(); // "$12.00"
+        return subtotalSpan.getText().trim();
     }
 
     public String getTotalText() {
-        return totalSpan.getText().trim(); // "$15.00"
+        return totalSpan.getText().trim();
     }
 
     public double getSubtotalValue() {
@@ -65,7 +56,7 @@ public class CartPage extends BasePage {
         return parseMoney(getTotalText());
     }
 
-    /* -------------------- CART ROW HELPERS -------------------- */
+
 
     public boolean hasItems() {
         return !cartVariantRows.isEmpty();
@@ -88,12 +79,10 @@ public class CartPage extends BasePage {
     }
 
     private WebElement quantityInput(long cartVariantId) {
-        // input id: "{cartVariantId}-quantity"
         return waitForElementVisible(By.id(cartVariantId + "-quantity"));
     }
 
     private WebElement lineTotal(long cartVariantId) {
-        // line total id: "{cartVariantId}-total"
         return waitForElementVisible(By.id(cartVariantId + "-total"));
     }
 
@@ -109,14 +98,7 @@ public class CartPage extends BasePage {
         return parseMoney(getLineTotalText(cartVariantId));
     }
 
-    /* -------------------- CHANGE QUANTITY (handleChange JS) -------------------- */
 
-    /**
-     * Sets quantity and waits for either:
-     * - DOM totals (#subtotal, #total, {id}-total) to change (successful update)
-     * - error overlay to appear/open
-     * - quantity to be reverted by JS if response not ok
-     */
     public CartPage setQuantityAndWait(long cartVariantId, int newQty) {
         if (newQty < 1) throw new IllegalArgumentException("Quantity must be >= 1");
 
@@ -144,22 +126,11 @@ public class CartPage extends BasePage {
         WebElement row = rowByCartVariantId(cartVariantId);
         WebElement removeLink = row.findElement(By.cssSelector("a.btn-outline-danger"));
         click(removeLink);
-
-        // after remove, row should disappear
-//        wait.until(ExpectedConditions.stalenessOf(row));
         waitForElementInvisible(row);
         return this;
     }
 
-    /* -------------------- CONFIRM ORDER (check() JS) -------------------- */
 
-    /**
-     * Clicks "Confirm order" and waits for outcome:
-     * - Redirect happened (URL changes), OR
-     * - Error overlay opens (data.error)
-     *
-     * Returns true if redirected, false if error overlay is shown.
-     */
     public OrderPage confirmOrderRedirected() {
         String oldUrl = getCurrentUrl();
 
@@ -169,7 +140,6 @@ public class CartPage extends BasePage {
 
         if (isErrorOverlayOpen()) {
             throw new AssertionError("Confirm order failed: error overlay opened.");
-            // (optionally: include overlay text)
         }
 
         return new OrderPage(driver).assertLoaded();
@@ -177,16 +147,10 @@ public class CartPage extends BasePage {
 
 
 
-
-
-    /* -------------------- CONTINUE BROWSING -------------------- */
-
     public ProductsPage continueBrowsing() {
         click(continueBrowsingLink);
         return new ProductsPage(driver).assertLoaded();
     }
-
-    /* -------------------- ERROR OVERLAY (showErrorOverlay JS) -------------------- */
 
     public boolean isErrorOverlayPresentInDom() {
         return exists(errorOverlay);
@@ -223,10 +187,7 @@ public class CartPage extends BasePage {
         return this;
     }
 
-    /* -------------------- MONEY PARSING -------------------- */
-
     private double parseMoney(String moneyText) {
-        // "$1,234.50" -> "1234.50"
         String cleaned = moneyText.replaceAll("[^0-9.]", "");
         if (cleaned.isBlank()) return 0.0;
         return Double.parseDouble(cleaned);

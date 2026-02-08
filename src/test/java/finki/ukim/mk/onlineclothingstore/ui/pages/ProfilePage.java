@@ -19,23 +19,21 @@ public class ProfilePage extends BasePage {
     @FindBy(css = ".profile-header p")
     private WebElement usernameText;
 
-    // Recent orders table may or may not exist (thymeleaf if)
     @FindBy(css = "table.table")
-    private List<WebElement> ordersTables; // list -> safe if not present
+    private List<WebElement> ordersTables;
 
     @FindBy(css = "tbody tr")
-    private List<WebElement> orderRows; // safe if no orders (empty)
+    private List<WebElement> orderRows;
 
-    // No-orders block exists only when orders empty
     @FindBy(css = ".card-body.text-center.py-5")
     private List<WebElement> noOrdersBlocks;
 
     @FindBy(css = "a[href='/products'].btn.btn-primary")
-    private List<WebElement> startShoppingButtons; // only in no-orders block
+    private List<WebElement> startShoppingButtons;
 
-    /* -------------------- DYNAMIC OVERLAY (CREATED BY JS) -------------------- */
 
-    private final By previewOverlay = By.id("orderPreviewOverlay");                 // created dynamically
+
+    private final By previewOverlay = By.id("orderPreviewOverlay");
     private final By overlayTitle = By.cssSelector("#orderPreviewOverlay #ordTitle");
     private final By overlaySubtitle = By.cssSelector("#orderPreviewOverlay #ordSubtitle");
     private final By overlayList = By.cssSelector("#orderPreviewOverlay #ordList");
@@ -57,8 +55,6 @@ public class ProfilePage extends BasePage {
         return new LoginPage(driver).assertLoaded();
     }
 
-    /* -------------------- ORDERS STATE -------------------- */
-
     public boolean hasOrders() {
         return !orderRows.isEmpty();
     }
@@ -71,14 +67,11 @@ public class ProfilePage extends BasePage {
         return orderRows.size();
     }
 
-    /* -------------------- PREVIEW BUTTONS -------------------- */
-
     public ProfilePage openPreviewForOrderId(long orderId) {
         By previewBtn = By.cssSelector("button.preview-order[data-order-id='" + orderId + "']");
         WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(previewBtn));
         btn.click();
 
-        // overlay gets created + class ord-show added
         wait.until(d -> isPreviewOverlayOpen());
         return this;
     }
@@ -94,8 +87,6 @@ public class ProfilePage extends BasePage {
         return this;
     }
 
-    /* -------------------- PREVIEW OVERLAY READ -------------------- */
-
     public boolean isPreviewOverlayPresentInDom() {
         return exists(previewOverlay);
     }
@@ -110,12 +101,12 @@ public class ProfilePage extends BasePage {
 
     public String getPreviewTitle() {
         if (!isPreviewOverlayPresentInDom()) return "";
-        return driver.findElement(overlayTitle).getText().trim(); // "Order #123"
+        return driver.findElement(overlayTitle).getText().trim();
     }
 
     public String getPreviewSubtitle() {
         if (!isPreviewOverlayPresentInDom()) return "";
-        return driver.findElement(overlaySubtitle).getText().trim(); // "2 item(s)"
+        return driver.findElement(overlaySubtitle).getText().trim();
     }
 
     public int getPreviewItemsCount() {
@@ -129,30 +120,22 @@ public class ProfilePage extends BasePage {
         // Click X
         driver.findElement(overlayCloseX).click();
 
-        // closePreviewOrder() removes overlay from DOM
         wait.until(d -> !exists(previewOverlay));
         return this;
     }
 
-    /* -------------------- CANCEL (ONLY WHEN PENDING) -------------------- */
 
     public ProfilePage cancelOrderIfPending(long orderId) {
-        // Cancel link exists only when status is PENDING (thymeleaf th:if)
         By cancelLink = By.cssSelector("a[href='/order/cancel/" + orderId + "']");
         if (driver.findElements(cancelLink).isEmpty()) {
-            // Not pending (or cancel not available)
             return this;
         }
 
         String oldUrl = driver.getCurrentUrl();
         driver.findElement(cancelLink).click();
-
-        // Usually redirect happens. If not, at least wait for URL or page refresh.
         wait.until(d -> !d.getCurrentUrl().equals(oldUrl) || d.getPageSource() != null);
         return this;
     }
-
-    /* -------------------- NO-ORDERS CTA -------------------- */
 
     public ProductsPage startShopping() {
         if (startShoppingButtons.isEmpty())

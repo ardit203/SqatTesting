@@ -17,7 +17,6 @@ public class LoginPage extends BasePage{
     @FindBy(name = "password")
     private WebElement passwordInput;
 
-//    @FindBy(xpath = "//button[@type='submit' and normalize-space()='Login']")
     @FindBy(css = "button[type='submit']")
     private WebElement loginButton;
 
@@ -61,7 +60,6 @@ public class LoginPage extends BasePage{
         sendKeys(passwordInput, password);
         click(loginButton);
 
-        // wait until the error appears in DOM
         wait.until(d -> isErrorPresent());
         return this;
     }

@@ -2,24 +2,17 @@ package finki.ukim.mk.onlineclothingstore.ui.pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.List;
 
 public class OrderPage extends BasePage {
 
-    /* -------------------- PAGE IDENTITY -------------------- */
-
     @FindBy(css = "form[action='/order'][method='post']")
     private WebElement orderForm;
 
 
-
     @FindBy(css = "h2.h5")
     private WebElement checkoutTitle;
-
-    /* -------------------- CUSTOMER FIELDS -------------------- */
-
 
     @FindBy(css = "input[name='email']")
     private WebElement emailInput;
@@ -41,16 +34,12 @@ public class OrderPage extends BasePage {
     @FindBy(css = "input[name='country']")
     private WebElement countryInput;
 
-    /* -------------------- PAYMENT METHOD -------------------- */
-
-    // radio inputs are inside labels, but input itself is stable by name/value
     @FindBy(css = "input[type='radio'][name='paymentMethod'][value='CARD']")
     private WebElement cardRadio;
 
     @FindBy(css = "input[type='radio'][name='paymentMethod'][value='CASH']")
     private WebElement cashRadio;
 
-    /* -------------------- CARD FIELDS (TOGGLE) -------------------- */
 
     @FindBy(id = "cardFields")
     private WebElement cardFieldsBox;
@@ -67,7 +56,6 @@ public class OrderPage extends BasePage {
     @FindBy(css = "input[name='cardCvc']")
     private WebElement cardCvcInput;
 
-    /* -------------------- CONSENT + ACTIONS -------------------- */
 
     @FindBy(id = "consent")
     private WebElement consentCheckbox;
@@ -78,7 +66,6 @@ public class OrderPage extends BasePage {
     @FindBy(css = "a[href='/cart']")
     private WebElement backToCartLink;
 
-    /* -------------------- SUMMARY -------------------- */
 
     @FindBy(id = "subtotal")
     private WebElement subtotalSpan;
@@ -86,7 +73,6 @@ public class OrderPage extends BasePage {
     @FindBy(id = "total")
     private WebElement totalSpan;
 
-    /* -------------------- ERROR (ONLY EXISTS WHEN ERROR != null) -------------------- */
 
     private final By errorAlert = By.cssSelector("form[action='/order'] .alert.alert-danger");
 
@@ -96,14 +82,9 @@ public class OrderPage extends BasePage {
 
     public OrderPage assertLoaded() {
         waitForElementVisible(emailLocator);
-//        wait.until(ExpectedConditions.visibilityOf(orderForm));
-//        wait.until(ExpectedConditions.visibilityOf(checkoutTitle));
-//        wait.until(ExpectedConditions.visibilityOf(subtotalSpan));
-//        wait.until(ExpectedConditions.visibilityOf(totalSpan));
         return this;
     }
 
-    /* -------------------- FILL CUSTOMER DETAILS -------------------- */
 
     public OrderPage fillCustomerDetails(String email, String phone, String address,
                                          String city, String zip, String country) {
@@ -116,7 +97,6 @@ public class OrderPage extends BasePage {
         return this;
     }
 
-    /* -------------------- PAYMENT SELECTION + TOGGLE -------------------- */
 
     public OrderPage selectCardPayment() {
         if (!cardRadio.isSelected()) cardRadio.click();
@@ -130,18 +110,13 @@ public class OrderPage extends BasePage {
         return this;
     }
 
-    /**
-     * cardFields visibility is controlled by JS:
-     * box.style.display = show ? "block" : "none";
-     */
+
     public boolean isCardFieldsVisible() {
-        // robust check for JS display toggling
         String display = cardFieldsBox.getCssValue("display");
         return display != null && !display.equalsIgnoreCase("none");
     }
 
     public OrderPage fillCardDetails(String name, String number, String expiry, String cvc) {
-        // ensure card mode is selected and fields are visible
         selectCardPayment();
         sendKeys(cardNameInput, name);
         sendKeys(cardNumberInput, number);
@@ -162,15 +137,6 @@ public class OrderPage extends BasePage {
         return this;
     }
 
-    /* -------------------- SUBMIT -------------------- */
-
-    /**
-     * Clicks Place order and waits for either:
-     * - redirect (URL changes) OR
-     * - error alert appears in DOM
-     * <p>
-     * Returns true if redirected, false if error shown.
-     */
     public ProfilePage placeOrderWaitOutcome(String email, String phone, String address, String city, Integer zip, String country,
                                              String paymentMethod, String name, String number, String expiry, String cvc) {
 
@@ -187,14 +153,12 @@ public class OrderPage extends BasePage {
         String oldUrl = driver.getCurrentUrl();
         click(placeOrderButton);
 
-        // Wait for either redirect OR error shown on the same page
         wait.until(d -> !d.getCurrentUrl().equals(oldUrl) || isErrorShown());
 
         if (isErrorShown()) {
             throw new AssertionError("Placing order failed: " + getErrorMessage());
         }
 
-        // Redirect happened -> Profile page should load
         return new ProfilePage(driver).assertLoaded();
     }
 
@@ -208,14 +172,12 @@ public class OrderPage extends BasePage {
         return els.isEmpty() ? "" : els.get(0).getText().trim();
     }
 
-    /* -------------------- NAV -------------------- */
 
     public CartPage backToCart() {
         click(backToCartLink);
         return new CartPage(driver).assertLoaded();
     }
 
-    /* -------------------- TOTALS -------------------- */
 
     public String getSubtotalText() {
         return subtotalSpan.getText().trim();

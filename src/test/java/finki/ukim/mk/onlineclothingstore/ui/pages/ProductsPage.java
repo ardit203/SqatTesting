@@ -14,13 +14,11 @@ public class ProductsPage extends BasePage {
     @FindBy(css = "a[href='/profile']")
     private WebElement profileLink;
 
-    // Page identity: filter form always exists on /products
     @FindBy(css = "form[action='/products']")
     private WebElement filterForm;
 
     private By filterLocator = By.cssSelector("form[action='/products']");
 
-    // Filter inputs (stable because of name=...)
     @FindBy(css = "form[action='/products'] input[name='name']")
     private WebElement searchInput;
 
@@ -42,11 +40,9 @@ public class ProductsPage extends BasePage {
     @FindBy(css = "form[action='/products'] button.btn.btn-primary.w-100")
     private WebElement applyFiltersBtn;
 
-    // Product cards (may be empty -> List is safe)
     @FindBy(css = ".product-card")
     private List<WebElement> productCards;
 
-    // Dynamic overlay (inserted into DOM only after clicking add-to-cart)
     private final By overlay = By.id("variantOverlay");
     private final By overlayClose = By.cssSelector("#variantOverlay .close-products-overlay");
     private final By overlayQty = By.id("quantity-product");
@@ -61,7 +57,6 @@ public class ProductsPage extends BasePage {
         return this;
     }
 
-    /* -------------------- FILTERS -------------------- */
 
     public ProductsPage setSearch(String name) {
         if(name==null){
@@ -103,8 +98,6 @@ public class ProductsPage extends BasePage {
     }
 
     public ProductsPage applyFilters(String name, String categoryName, String department, String sort, Integer min, Integer max) {
-        // Use staleness of something on the page to wait for reload
-//        WebElement oldFirstCard = productCards.isEmpty() ? null : productCards.get(0);
         setSearch(name);
         selectCategoryByVisibleText(categoryName);
         selectDepartmentByVisibleText(department);
@@ -115,8 +108,6 @@ public class ProductsPage extends BasePage {
         waitForElementVisible(filterLocator);
         return this;
     }
-
-    /* -------------------- PRODUCT ACTIONS -------------------- */
 
     public int productCount() {
         return productCards.size();
@@ -142,28 +133,17 @@ public class ProductsPage extends BasePage {
         return this;
     }
 
-    /**
-     * Complete flow from Products page:
-     * - click add-to-cart on a product card
-     * - wait overlay
-     * - choose variant by size
-     * - set quantity
-     * - click Add to cart inside overlay
-     */
     public ProductsPage addToCartFromOverlay(String productName, String size, int quantity) {
         clickAddToCartByProductName(productName);
 
-        // quantity input exists only after overlay is inserted
         WebElement qtyInput = waitForElementVisible(overlayQty);
         qtyInput.clear();
         qtyInput.sendKeys(String.valueOf(quantity));
 
-        // choose size button (data-size is perfect for this)
         By variantBtnBySize = By.cssSelector("#variantOverlay .check-before-request-btn[data-size='" + size + "']");
         WebElement variantBtn = waitForElementClickable(variantBtnBySize);
         variantBtn.click();
 
-        // overlay might close after success; wait for it to disappear
         waitForElementInvisible(overlay);
         return this;
     }
@@ -175,8 +155,6 @@ public class ProductsPage extends BasePage {
         }
         return this;
     }
-
-    /* -------------------- HELPERS -------------------- */
 
     private WebElement findCardByName(String productName) {
         if (productCards.isEmpty())
